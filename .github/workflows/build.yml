@@ -12,7 +12,10 @@ jobs:
     
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
-      
+
+    - name: Install .NET Framework 4.5 Developer Pack
+      run: choco install netfx-4.5-devpack
+    
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
       
