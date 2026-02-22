@@ -9,13 +9,20 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
+
+    - name: Install .NET 4.5 Reference Assemblies
+      shell: pwsh
+      run: |
+        $zipUrl = "https://www.nuget.org/api/v2/package/Microsoft.NETFramework.ReferenceAssemblies.net45/1.0.3"
+        $targetDir = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5"
+        Invoke-WebRequest -Uri $zipUrl -OutFile "net45sdk.zip"
+        Expand-Archive -Path "net45sdk.zip" -DestinationPath "net45sdk_temp"
+        New-Item -ItemType Directory -Force -Path $targetDir
+        Copy-Item -Path "net45sdk_temp\build\.NETFramework\v4.5\*" -Destination $targetDir -Recurse -Force
     
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
-
-    - name: Install .NET Framework 4.5 Developer Pack
-      run: choco install netfx-4.5.2-devpack
-    
+      
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
       
