@@ -7,22 +7,27 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v4
     
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
       
     - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.5
+      uses: NuGet/setup-nuget@v2
       
     - name: Restore Packages
       run: nuget restore CircuitReverse/CircuitReverse.sln
 
     - name: Build App
-      run: msbuild CircuitReverse/CircuitReverse.sln /p:Configuration=Release
+      run: msbuild CircuitReverse/CircuitReverse.sln /p:Configuration=Release /p:Platform="Any CPU"
 
-    - name: Upload EXE
-      uses: actions/upload-artifact@v3
+    - name: Upload Compiled EXE
+      uses: actions/upload-artifact@v4
       with:
-        name: Compiled-App
-        path: '**/bin/Release/**'
+        name: CircuitReverse-Windows-EXE
+        path: |
+          **/bin/Release/*.exe
+          **/bin/Release/*.dll
+          **/bin/Release/*.config
+        if-no-files-found: error
